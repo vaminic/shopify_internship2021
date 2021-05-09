@@ -1,0 +1,178 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: #050d00;
+	min-height: 100%;
+	color: #C0C0C0;
+	margin: 0;
+	padding: 0;
+	font-size: max(1.2vw,1.2vh,0.6em);
+	font-family: Sans-serif;
+}
+
+.banner {
+	position: relative;
+	width: 98%;
+}
+
+.sidebar {
+	height: 100vh;
+	position: fixed;
+}
+
+.infoCard {
+	margin-top: 2vh;
+	border-top-style: solid;
+	border-top-width: 0.1vh;
+	border-color: white;
+	animation-name: cascadeBottom;
+	animation-duration: 1s;
+	background-color: #050d00;
+	opacity: 100%;
+	overflow: hidden;
+	position: relative;
+}
+.poster {
+	position: relative;
+	margin: 0.02vh;
+	width: 100%;
+}
+
+.panel {
+	margin-top: 1vh;
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	overflow: hidden;
+	z-index: 
+}
+
+.infopanel {
+	width: 83%;
+	margin: 0;
+	margin-top: 3%;
+	min-height: max(10vh,10vw);
+	overflow: hidden;
+}
+
+.posterPanel{
+	width: 15%;
+	margin-right: 1vw;
+	min-height: max(10vh,10vw);
+}
+
+.nomBtn {
+	position: absolute;
+	bottom: 5%;
+	font-size: max(1.2vw,1.2vh,0.8em);
+	background-color: #D4AF37;
+	color: #050d00;
+	cursor: pointer;
+	padding: 0.2vw 02vh;
+}
+.nomBtn:disabled {
+	background-color: gray;
+	cursor: default;
+}
+
+.nomPanel {
+	max-width:18%;
+	height: 20vh;
+	margin: auto;
+	margin-right: 2%;
+	text-align: center;
+	vertical-align: bottom;
+	position: relative;
+	animation-name: fade;
+	animation-duration: 2s;
+}
+
+.rmvBtn {
+	position: relative;
+	cursor: pointer;
+	padding: 0.2vw 02vh;
+	max-width: 100%;
+	font-size: max(1vw,1vh,0.6em);
+}
+#header{
+	opacity: 100%;
+	background-color: #64943e;
+	z-index: 2;
+	position: fixed;
+	top: 0;
+	text-align: center;
+	width: 100%;
+	padding-top: 2vh;
+	padding-bottom: 2vh;
+	margin-top: -10vh;
+	visibility: hidden;
+	color: #fcfcfc;
+}
+
+#top {
+	font-family: Verdana;
+	font-weight: bold;
+	font-style: italic;
+	padding-top: 2vh;
+	padding-left: 2vw;
+	color: #fcfcfc;
+	height: 30vh;
+}
+#logo {
+	font-size: max(3vw,3vh,2em);
+}
+
+#main {
+	width: 50vw;
+	min-height: 40vh;
+	margin: auto;
+}
+#search {
+	font-size: max(1.5vw,1.5vh,1.1em);
+	background-color: #050d00;
+	z-index: 1;
+	position: relative;
+	height: 7vh;
+}
+#nomination-bar {
+	visibility: hidden;
+	height: 23vh;
+	width: 100vw;
+	margin-top: 100vh;
+	position: fixed;
+	top: 0;
+	z-index: 1;
+	border-top-width: 0.1vh;
+	border-top-style: solid;
+	border-top-color: white;
+	background-color: #0c1c01;
+	font-size: max(0.9vw,0.9vh,0.7em);
+}
+
+#searchbar {
+	width: 35vw;
+	font-size: max(1.5vw,1.5vh,1.1em);
+	font-family: Ariel, sans-serif;
+}
+
+#bottom{
+	position: relative;
+	margin-top: 25vh;
+	text-align: center;
+	font-size: max(0.7vw,0.7vh,0.5em);
+	width: 100%;
+	
+}
+
+@keyframes cascadeBottom{
+	0% {margin-top:-7vh;}
+	100% {margin-top: 2vh;}
+}
+
+@keyframes fade{
+	0% {opacity: 0%;}
+	100% {opacity: 100%;}
+}

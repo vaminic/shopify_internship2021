@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>The Shoppies</title>
+		<link rel="stylesheet" href="styles.css">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=2">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="script.js"></script>
+	</head>
+	<body>
+		<div id="header" class="banner">
+			<span>Your nominations have been received!</span><br>
+			<span style="font-size: max(0.9vw,0.9vh,0.7em)">You may only nominate up to five movies. You may still edit your nominations until candidates are finalized.</span>
+		</div>
+		<div id="top" class="banner">
+			<div id="logoContainer">
+				<span id="logo">The Shoppies</span><br>Awards Nominations
+			</div>
+		</div>
+		<div id="main">
+			<div id="search">
+				<label style="min-width:7vw; margin-right:1vw">MOVIE TITLE</label><input id="searchbar" type="search" oninput="fetchResults()"placeholder="Search movies to nominate">
+			</div>
+			<div name="results" id="results" style="margin-top: 5vh">
+			</div>
+		</div>
+		<div id="nomination-bar" class="sidebar">
+			<div style="position:relative; margin-top:-2vh; margin-bottom: 0.5vh; text-align:center; width:100%;">
+				<img id="grip" src="grip.png" style="max-height:1.2vh; display:inline-block; cursor:pointer;" name="1" onclick="minimize(name)" >
+			</div>
+			<label><b><u>Your Nominations</u></b></label>
+			<br>
+			<div id="nominations"></div>
+		</div>
+		<div id="bottom">
+			<span>This web page is a submission to Shopify's UX Developer Intern & Web DeveloperIntern Challenge - Fall 2021.</span>
+		</div>
+		
+		<script>
+			var nominations = [];
+			function fetchResults(){
+				var rawInput = document.getElementById('searchbar').value;
+				var query = rawInput.split(' ').join('+');
+				$.getJSON('https://www.omdbapi.com/?apikey=33b3cc6e&type=movie&s=' + query, function(data){
+					if (data.Response == "True") {
+						var n = parseInt(data.totalResults, 10);
+						document.getElementById('results').innerHTML = "";
+						var mov = data.Search;
+						var i = 0;
+						while (mov[i]){
+							var Id = mov[i].imdbID;
+							var safeTitle = escapeHtml(mov[i].Title);
+							
+							document.getElementById('results').innerHTML += 
+								"<div class='infoCard'>"
+									+ "<div class='panel posterPanel'><img class='poster' alt='Movie Poster' src='" + mov[i].Poster +"' onerror=this.src='posterMissing.png'>" + "</div>"
+									+ "<div class='panel infopanel'>" + safeTitle + "<br>(" + mov[i].Year + ")<br><input id='" + mov[i].imdbID + "'class='nomBtn' type='button' name='" + safeTitle + "' value='Nominate' onclick='addNomination(name,&#39;" + mov[i].Year + "&#39;,&#39;" + mov[i].Poster + "&#39;,id)'></div>"
+								+ "</div>";
+							var status = checkNominated(safeTitle);
+							if (status === true){
+								disableBtn(mov[i].imdbID);
+							} else {
+								enableBtn(mov[i].imdbID);
+							}
+							i += 1;
+						};
+					} else if (!query){
+						document.getElementById('results').innerHTML = "";
+					}
+				});
+			}
+			function addNomination(title,year,poster,id){
+				if (nominations.length < 5){
+					var mov = {"title":title,"year":year,"poster":poster,"id":id};
+					nominations.push(mov);
+					updateNominations();
+					disableBtn(id);
+					if (nominations.length === 1){
+						$("#nomination-bar").css("visibility","visible");
+						$("#nomination-bar").fadeIn(500).animate({"margin-top":"77vh"},500).dequeue();
+					}
+				}
+			}
+			function removeNomination(id){
+				var val = id;
+				var index = nominations.findIndex(function(item,i){
+					return item.id === val;
+				});
+				if (index > -1){
+					nominations.splice(index,1);
+					updateNominations();
+					enableBtn(id);
+				}
+				if (nominations.length < 1){
+					$("#nomination-bar").fadeOut(500).animate({"margin-top":"100vh"},500).dequeue();
+				}
+			}
+			function updateNominations(){
+				document.getElementById('nominations').innerHTML = "";
+				var n = nominations.length;
+				for (var i = 0; i < n; i++){
+					var id = nominations[i].id;
+					document.getElementById('nominations').innerHTML += 
+						"<div class='panel nomPanel'>" + nominations[i].title + " (" + nominations[i].year + ") <br>"
+						+"<img src='" + nominations[i].poster + "' style='max-height:10vh; width:auto; display:inline-block' onerror=this.src='posterMissing.png'><br>"
+						+ "<input type='button' value='Remove' class='rmvBtn' name='" + id + "' onclick='removeNomination(name);'>"
+						+"</div>";
+				}
+				if (n === 5){
+					$("#header").css("visibility","visible");
+					$("#header").fadeIn(100).animate({"margin-top":"0vh"},250).dequeue();
+					$("#logoContainer").fadeIn(100).animate({"margin-top":"10vh"},250).dequeue();
+				} else {
+					$("#header").fadeOut(100).animate({"margin-top":"-10vh"},250).dequeue();
+					$("#header").css("visibility","hidden");
+					$("#logoContainer").fadeIn(100).animate({"margin-top":"0vh"},250).dequeue();
+				}
+			}
+			function checkNominated(name){
+				var n = nominations.length;
+				for (var i = 0; i < n; i++){
+					if (nominations[i].title == name && nominations){
+						return true;
+					}
+				}
+			}
+			
+			function minimize(status){
+				if (status == 0){
+					$("#nomination-bar").animate({"margin-top":"77vh"},500).dequeue();
+					$("#grip").attr("name","1");
+				} else if (status == 1){
+					$("#nomination-bar").animate({"margin-top":"100vh"},500).dequeue();
+					$("#grip").attr("name","0");
+				}
+			}
+		</script>
+	</body>
+</html>	
